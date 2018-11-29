@@ -10,19 +10,27 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   min-height: 100vh;
 }
 
+button.start {
+  margin: 3vh;
+  border: 0;
+  padding: 2vh;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 div.chessboard {
-  border: 1px solid black;
-  width: 90vh;
-  height: 90vh;
+  width: 80vh;
+  height: 80vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -33,7 +41,6 @@ div.chessboard {
 div.chessboard div {
   -ms-flex-preferred-size: 12.5%;
       flex-basis: 12.5%;
-  height: 12.5%;
   background-color: white;
   border: 1px solid black;
   display: -webkit-box;
@@ -53,6 +60,7 @@ div.chessboard div div.pawn {
       flex-basis: 80%;
   height: 80%;
   cursor: pointer;
+  border: white solid 2px;
 }
 
 div.chessboard div div.pawn.black {
@@ -61,6 +69,10 @@ div.chessboard div div.pawn.black {
 
 div.chessboard div div.pawn.white {
   background-color: #adad85;
+}
+
+div.chessboard div div.pawn.active {
+  border-color: yellow;
 }
 
 div.chessboard div.black {

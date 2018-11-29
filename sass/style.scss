@@ -7,21 +7,31 @@
 body{
     background-color: beige;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    
+    align-items: center;    
+    flex-direction: column;
     min-height: 100vh;
 }
 
+button.start{
+    margin: 3vh;
+    border:0;
+    padding: 2vh;
+    text-transform: uppercase;
+    cursor: pointer;
+
+}
+
 div.chessboard{
-    border: 1px solid black;
-    width: 90vh;
-    height: 90vh;
+    
+    width: 80vh;
+    height: 80vh;
     display: flex;
     flex-wrap: wrap;
 
+
     div{
-        flex-basis: 12.5%; 
-        height: 12.5% ;       
+        flex-basis: 12.5%;               
         background-color: white;
         border: 1px solid black;
         display: flex;
@@ -33,11 +43,18 @@ div.chessboard{
             flex-basis: 80%;
             height: 80%;
             cursor: pointer;
+            border: white solid 2px;
             &.black{
                 background-color: #4d0000;
+                
             }
             &.white{
-                background-color: #adad85
+                background-color: #adad85;
+                
+            }
+            &.active
+            {
+                border-color: yellow;
             }
            
         }
