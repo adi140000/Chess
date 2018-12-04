@@ -31,7 +31,9 @@ div.chessboard{
 
 
     div{
-        flex-basis: 12.5%;               
+        flex-basis: 12.5%;
+        height:  12.5%;   
+        overflow: hidden;           
         background-color: white;
         border: 1px solid black;
         display: flex;
@@ -64,3 +66,12 @@ div.chessboard{
     }
 }
 
+@media only screen and (orientation:portrait)
+{
+    div.chessboard{
+
+        width: 40vh;
+        height: 40vh;
+    }
+
+}

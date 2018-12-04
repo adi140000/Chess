@@ -41,6 +41,8 @@ div.chessboard {
 div.chessboard div {
   -ms-flex-preferred-size: 12.5%;
       flex-basis: 12.5%;
+  height: 12.5%;
+  overflow: hidden;
   background-color: white;
   border: 1px solid black;
   display: -webkit-box;
@@ -77,5 +79,12 @@ div.chessboard div div.pawn.active {
 
 div.chessboard div.black {
   background-color: black;
+}
+
+@media only screen and (orientation: portrait) {
+  div.chessboard {
+    width: 40vh;
+    height: 40vh;
+  }
 }
 /*# sourceMappingURL=style.css.map */
