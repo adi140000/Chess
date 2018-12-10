@@ -6,31 +6,127 @@ const blackPostion = document.querySelectorAll("div.black");
 
 const pawnBlack = [];
 const pawnWhite = [];
+let pawnsAll = null;
+
+
 
 
 class Pawn {
-    constructor(figure, postion, lastPostion = null) {
+    constructor(figure, postion = 1, decision = true, lastPostion = null) {
         this.figure = figure;
         this.postion = postion;
-        this.lastPostion = lastPostion
+        this.lastPostion = lastPostion;
+        this.decision = decision
+        this.nextPostions = [];
+        this.block = true;
+
     }
 
-    move(item, decision) {
+    move(item, pawnsAll) {
         if (item.childNodes.length == 0) {
-            const thisPostion = parseInt(item.dataset.num);            
-            let tmp = 1;
-            if (!decision) {
-                tmp = -tmp;
-            }
-            if (this.postion + tmp * 4 === thisPostion)
-            {
-                this.lastPostion=this.postion;
-                this.postion=this.postion + tmp * 4 ;
+            const thisPostion = parseInt(item.dataset.num);
+            if (this.nextPostions.indexOf(thisPostion) != -1) {
+                this.lastPostion = this.postion;
+                this.postion = thisPostion;
                 item.appendChild(this.figure);
+                this.attach(this.postion, this.decision);
+                this.figure.classList.remove("active");
+                if (this.figure.classList.contains("black")) {
+                    pawnsAll.forEach(element => {
+                        if (element.figure.classList.contains("black")) {
+                            element.block = false;
+                        } else {
+                            element.block = true;
+                        }
+                    })
+                } else {
+
+                    pawnsAll.forEach(element => {
+                        if (element.figure.classList.contains("white")) {
+                            element.block = false;
+                        } else {
+                            element.block = true;
+                        }
+                    })
+                }
+
             }
         }
     }
+
+    attach(item, decision = true) {
+        const parseDate = parseInt(item);
+        let tmp = 1;
+        if (decision == false) {
+            tmp = -tmp;
+        }
+
+        if (Math.floor(parseDate / 4.1) % 2 === 0) {
+
+            if ((parseDate % 4) !== 1) {
+
+                this.nextPostions = [];
+                this.nextPostions.push(parseDate + (tmp * 4));
+                this.nextPostions.push(parseDate + (tmp * 4) - 1);
+            } else {
+                this.nextPostions = [];
+                this.nextPostions.push(parseDate + (tmp * 4));
+            }
+        } else {
+            if ((parseDate % 4) !== 0) {
+                this.nextPostions = [];
+                this.nextPostions.push(parseDate + (tmp * 4));
+                this.nextPostions.push(parseDate + (tmp * 4) + 1);
+            } else {
+                this.nextPostions = [];
+                this.nextPostions.push(parseDate + (tmp * 4));
+            }
+        }
+    }
+
+
+    hits(pawnArray, mainArray) {
+        const removeArray = [];
+        const newPostion = [];
+        this.nextPostions.forEach(item => {
+            pawnArray.forEach(element => {
+                if (item === element.postion) {
+                    if(Math.floor(element.postion/4.1)%2==0){
+                        if(Math.floor(element.postion%4)!==1)
+                        {
+                            removeArray.push(element.postion);
+                            let dif = Math.abs(this.postion-element.postion)                    
+                           this.nextPostions.push(element.postion+dif+1);
+                        }                  
+                        
+                      
+                    }
+                    if(Math.floor(element.postion/4.1)%2==1)
+                    {
+
+                        if(Math.floor(element.postion%4)!==0)
+                        {
+                            removeArray.push(element.postion);
+                            let dif = Math.abs(this.postion-element.postion)                    
+                           this.nextPostions.push(element.postion+dif+1);
+                        }   
+                    }
+                    
+                }
+            })
+        })
+        console.log(removeArray);
+        for (let i = 0; i < removeArray.length; i++) {
+            const index = this.nextPostions.indexOf(removeArray[i]);
+            this.nextPostions.splice(index,1);
+        }
+        
+    }
 }
+
+
+
+
 
 
 
@@ -48,14 +144,24 @@ const draw = function () {
                 }
 
             })
-            console.log(pawn);
+            pawnWhite.forEach(element => {
+                if (element.figure.classList.contains("active")) {
+                    pawn = element;
+                }
+
+            })
+
             if (pawn != null) {
                 if (pawn.figure.classList.contains("black")) {
-                    pawn.move(item, true);
+                    pawn.hits(pawnWhite, blackPostion);
+                    pawn.move(item, pawnsAll);
                 } else if (pawn.figure.classList.contains("white")) {
-                    pawn.move(item, false);
+                    pawn.hits(pawnBlack, blackPostion);
+                    pawn.move(item, pawnsAll);
+
                 }
             }
+            console.log(pawn);
         })
 
     })
@@ -64,7 +170,9 @@ const draw = function () {
         const prote = document.createElement("div");
         prote.classList.add("pawn");
         prote.classList.add("black");
-        const pawn = new Pawn(prote, parseInt(item.dataset.num));
+        const parseDate = parseInt(item.dataset.num);
+        const pawn = new Pawn(prote, parseDate, true);
+        pawn.attach(item.dataset.num, true);
         item.appendChild(pawn.figure);
         pawnBlack.push(pawn);
     })
@@ -73,7 +181,9 @@ const draw = function () {
         const prote = document.createElement("div");
         prote.classList.add("pawn");
         prote.classList.add("white");
-        const pawn = new Pawn(prote, parseInt(item.dataset.num));
+        const parseDate = parseInt(item.dataset.num);
+        const pawn = new Pawn(prote, parseDate, false);
+        pawn.attach(item.dataset.num, false);
         item.appendChild(pawn.figure);
         pawnWhite.push(pawn);
 
@@ -84,31 +194,38 @@ const draw = function () {
 
     pawnBlack.forEach((item) => {
         item.figure.addEventListener("click", function () {
-            pawnBlack.forEach((item2) => {
-                if (item2.figure.classList.contains("active")) {
-                    item2.figure.classList.remove("active");
-                }
-            })
-            item.figure.classList.toggle("active");
-            console.log(item.figure.parentElement.dataset.num);
+            if (item.block) {
+                pawnBlack.forEach((item2) => {
+                    if (item2.figure.classList.contains("active")) {
+                        item2.figure.classList.remove("active");
+                    }
+                })
+                item.figure.classList.toggle("active");
 
+                item.attach(item.figure.parentNode.dataset.num, true);
+            }
         })
+
     })
 
     pawnWhite.forEach((item) => {
         item.figure.addEventListener("click", function () {
-            pawnWhite.forEach((item2) => {
-                if (item2.figure.classList.contains("active")) {
-                    item2.figure.classList.remove("active");
-                }
-            })
-            item.figure.classList.toggle("active");
-            console.log(item.figure.parentElement.dataset.num);
-            console.log(this);
+            if (item.block) {
+                pawnWhite.forEach((item2) => {
+                    if (item2.figure.classList.contains("active")) {
+                        item2.figure.classList.remove("active");
 
+                    }
+                })
+
+                item.figure.classList.toggle("active");
+                item.attach(item.figure.parentNode.dataset.num, false);
+
+            }
         })
     })
-
+    pawnsAll = pawnBlack.concat(pawnWhite);
+    console.log()
     this.removeEventListener("click", draw)
 }
 
