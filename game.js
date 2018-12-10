@@ -91,36 +91,43 @@ class Pawn {
         this.nextPostions.forEach(item => {
             pawnArray.forEach(element => {
                 if (item === element.postion) {
-                    if(Math.floor(element.postion/4.1)%2==0){
-                        if(Math.floor(element.postion%4)!==1)
-                        {
+                    if (Math.floor(element.postion / 4.1) % 2 == 0) {
+                        if (Math.floor(element.postion % 4) !== 1) {
                             removeArray.push(element.postion);
-                            let dif = Math.abs(this.postion-element.postion)                    
-                           this.nextPostions.push(element.postion+dif+1);
-                        }                  
-                        
-                      
-                    }
-                    if(Math.floor(element.postion/4.1)%2==1)
-                    {
+                            let dif = Math.abs(this.postion - element.postion)
+                            if (dif === 3)
+                                this.nextPostions.push(element.postion + 4);
+                            if (dif === 4)
+                                this.nextPostions.push(element.postion + 3);
+                            if (dif === 5)
+                                this.nextPostions.push(element.postion + 4);
+                        }
 
-                        if(Math.floor(element.postion%4)!==0)
-                        {
-                            removeArray.push(element.postion);
-                            let dif = Math.abs(this.postion-element.postion)                    
-                           this.nextPostions.push(element.postion+dif+1);
-                        }   
+
                     }
-                    
+                    if (Math.floor(element.postion / 4.1) % 2 == 1) {
+
+                        if (Math.floor(element.postion % 4) !== 0) {
+                            removeArray.push(element.postion);
+                            let dif = Math.abs(this.postion - element.postion)
+                            if (dif === 3)
+                                this.nextPostions.push(element.postion + 4);
+                            if (dif === 4)
+                                this.nextPostions.push(element.postion + 3);
+                            if (dif === 5)
+                                this.nextPostions.push(element.postion + 4);
+                        }
+                    }
+
                 }
             })
         })
         console.log(removeArray);
         for (let i = 0; i < removeArray.length; i++) {
             const index = this.nextPostions.indexOf(removeArray[i]);
-            this.nextPostions.splice(index,1);
+            this.nextPostions.splice(index, 1);
         }
-        
+
     }
 }
 
