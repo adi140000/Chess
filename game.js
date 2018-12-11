@@ -31,6 +31,8 @@ class Pawn {
                 item.appendChild(this.figure);
                 this.attach(this.postion, this.decision);
                 this.figure.classList.remove("active");
+                   
+
                 if (this.figure.classList.contains("black")) {
                     pawnsAll.forEach(element => {
                         if (element.figure.classList.contains("black")) {
@@ -85,22 +87,27 @@ class Pawn {
     }
 
 
-    hits(pawnArray, mainArray) {
+    hits(pawnArray, mainArray, ifWhite = false) {
         const removeArray = [];
-        const newPostion = [];
+        let tmp = 1;
+        
+        if (ifWhite) {
+            tmp = -tmp;
+        }
         this.nextPostions.forEach(item => {
             pawnArray.forEach(element => {
                 if (item === element.postion) {
                     if (Math.floor(element.postion / 4.1) % 2 == 0) {
                         if (Math.floor(element.postion % 4) !== 1) {
                             removeArray.push(element.postion);
-                            let dif = Math.abs(this.postion - element.postion)
+                            let dif = Math.abs(this.postion - element.postion);                        
+                            
                             if (dif === 3)
-                                this.nextPostions.push(element.postion + 4);
+                                this.nextPostions.push(element.postion + (tmp * 4));
                             if (dif === 4)
-                                this.nextPostions.push(element.postion + 3);
+                                this.nextPostions.push(element.postion + (tmp * 3));
                             if (dif === 5)
-                                this.nextPostions.push(element.postion + 4);
+                                this.nextPostions.push(element.postion + (tmp * 4));
                         }
 
 
@@ -109,13 +116,14 @@ class Pawn {
 
                         if (Math.floor(element.postion % 4) !== 0) {
                             removeArray.push(element.postion);
-                            let dif = Math.abs(this.postion - element.postion)
+                            let dif = Math.abs(this.postion - element.postion)                     
+                            
                             if (dif === 3)
-                                this.nextPostions.push(element.postion + 4);
+                                this.nextPostions.push(element.postion + (tmp * 4));
                             if (dif === 4)
-                                this.nextPostions.push(element.postion + 3);
+                                this.nextPostions.push(element.postion + (tmp * 3));
                             if (dif === 5)
-                                this.nextPostions.push(element.postion + 4);
+                                this.nextPostions.push(element.postion + (tmp * 4));
                         }
                     }
 
@@ -127,6 +135,7 @@ class Pawn {
             const index = this.nextPostions.indexOf(removeArray[i]);
             this.nextPostions.splice(index, 1);
         }
+        
 
     }
 }
@@ -141,7 +150,7 @@ const draw = function () {
 
     let i = 1;
     blackPostion.forEach(item => {
-        item.dataset.num = i;
+        item.dataset.num = i;        
         i++;
         item.addEventListener("click", function () {
             let pawn = null;
@@ -160,11 +169,11 @@ const draw = function () {
 
             if (pawn != null) {
                 if (pawn.figure.classList.contains("black")) {
-                    pawn.hits(pawnWhite, blackPostion);
+                    pawn.hits(pawnWhite,blackPostion);                    
                     pawn.move(item, pawnsAll);
                 } else if (pawn.figure.classList.contains("white")) {
-                    pawn.hits(pawnBlack, blackPostion);
-                    pawn.move(item, pawnsAll);
+                    pawn.hits(pawnBlack, blackPostion, true);                    
+                    pawn.move(item, pawnsAll,);
 
                 }
             }
